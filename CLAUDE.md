@@ -52,8 +52,8 @@ you generate — a bad migration ships on the next push.
 
 ## Conventions
 
-- Design system: Crafted Minimal (`~/design/design.md` + `tokens.css`). Semantic tokens only, 4.5:1
-  contrast floor, accent means interactive, no em-dashes in UI copy.
+- Design system: the house style (`~/design/design.md` + `core.css` + one theme file, `house-style`
+  skill). shadcn token names only, 4.5:1 contrast floor, primary means interactive, no em-dashes in UI copy.
 - UI copy is **Russian**. Keep it plain and non-technical — the audience is café and salon owners.
 - Secrets in `.env.local` (needs `DATABASE_URL`, `BETTER_AUTH_SECRET`, `CRYPTO_KEY`); Vercel env for prod.
 - Conventional commits.
