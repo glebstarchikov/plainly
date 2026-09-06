@@ -23,7 +23,7 @@ export default function Page({
   const displayName = schema?.label || schema?.name || decodeURIComponent(resolvedParams.name);
   
   return (
-    <div className="max-w-screen-xl mx-auto flex-1 flex flex-col h-full">
+    <div className="flex-1 flex flex-col h-full">
       <DocumentTitle
         title={formatRepoBranchTitle(displayName, config.owner, config.repo, config.branch)}
       />
