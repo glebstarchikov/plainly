@@ -5,6 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Content widths, from glebstarchikov/design v3.1: narrow for forms and settings,
+     wide for lists and admin views. Utilities: max-w-narrow, max-w-wide. */
+  --container-narrow: 40rem;
+  --container-wide: 64rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);

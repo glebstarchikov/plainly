@@ -35,7 +35,7 @@ export default function Page() {
   return (
     <MainRootLayout>
       <DocumentTitle title="Проекты" />
-      <div className="max-w-screen-sm mx-auto p-4 md:p-6 space-y-8">
+      <div className="max-w-narrow mx-auto p-4 md:p-6 space-y-8">
         {user.accounts.length > 0 ? (
           <div className="min-h-[calc(100vh-12rem)] flex flex-col justify-center space-y-8">
             {hasRecentVisits && (

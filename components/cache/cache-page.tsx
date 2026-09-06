@@ -261,7 +261,7 @@ export function CachePage({
 
   if (loading || !data) {
     return (
-      <div className="max-w-screen-lg mx-auto space-y-4">
+      <div className="max-w-wide mx-auto space-y-4">
         <div className="grid gap-4 lg:grid-cols-2">
           <Card className="h-full">
             <CardHeader>
@@ -400,7 +400,7 @@ export function CachePage({
 
   return (
     <TooltipProvider>
-      <div className="max-w-screen-lg mx-auto space-y-4">
+      <div className="max-w-wide mx-auto space-y-4">
         <div className="grid gap-4 lg:grid-cols-2">
           <Card className="h-full">
             <CardHeader>

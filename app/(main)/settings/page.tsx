@@ -44,7 +44,7 @@ export default async function Page() {
   return (
     <MainRootLayout>
       <DocumentTitle title="Настройки" />
-      <div className="max-w-screen-sm mx-auto p-4 md:p-6 space-y-6">
+      <div className="max-w-narrow mx-auto p-4 md:p-6 space-y-6">
         <Link
           className={cn(
             buttonVariants({ variant: "outline", size: "xs" }),
