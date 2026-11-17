@@ -15,12 +15,18 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
 *.pem
 .docs
 .codex
+
+# editors
+.vscode/
+.idea/
+*.swp
 
 # debug
 npm-debug.log*
@@ -29,7 +35,7 @@ yarn-error.log*
 
 # env files
 .env*
-!.env.local.example
+!.env.example
 
 # vercel
 .vercel

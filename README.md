@@ -1,42 +1,65 @@
 # Plainly
 
-A simple, git-based content editor for static sites — the editing layer for AI- and code-generated websites. Non-technical owners edit content through a friendly interface; every change is committed straight to the site's GitHub repository and goes live on the next rebuild.
+Plainly is a content editor for the owner of a static site. The interface is in Russian. You sign in with email or GitHub, edit the content described in the site's `.pages.yml`, and Plainly commits the change to that site's GitHub repository. Photos are reduced and saved as WebP in the browser before they are uploaded.
 
-Built on [Pages CMS](https://pagescms.org) (MIT), rebranded and localised (Russian UI).
+![Plainly sign-in page, with the Russian prompt, a GitHub button, and an email field](docs/sign-in.png)
 
-## Stack
+The screenshot is the sign-in page from a local run. Editing a repository also needs a GitHub App on your own GitHub account. That step is described below, and it cannot be finished without those credentials.
 
-Next.js · better-auth (email OTP) · Drizzle ORM + PostgreSQL · a GitHub App · Resend · Vercel.
+## Quick start
 
-## How it works
+These steps were run on a clean clone with Node.js 22 and PostgreSQL 16 on Ubuntu 24.04.
 
-- Editors sign in with **email only** — a 6-digit code, no GitHub account required.
-- Each site's editable content model lives in a **`.pages.yml`** at the repo root.
-- Images are **downscaled and converted to WebP in the browser** before upload.
-- Saving an edit commits to the repo → the static site rebuilds and publishes.
-
-## Local development
-
-Requires PostgreSQL, a GitHub App, and a `.env.local`.
+Install dependencies:
 
 ```bash
-npm install
+npm ci
+```
 
-# PostgreSQL (Docker):
-docker run --name plainly-db \
-  -e POSTGRES_USER=plainly -e POSTGRES_PASSWORD=plainly -e POSTGRES_DB=plainly \
-  -p 5432:5432 -d postgres:16
+Create a PostgreSQL 16 database that matches `DATABASE_URL` in `.env.example` (`plainly` / `plainly` on `127.0.0.1:5432`). On Ubuntu 24.04 the commands are:
 
-# Create .env.local with DATABASE_URL, BETTER_AUTH_SECRET, CRYPTO_KEY
-# (see .env.local.example), then create the GitHub App:
-npm run setup:github-app -- --base-url http://localhost:3000 --env .env.local
+```bash
+sudo apt-get install -y postgresql
+sudo pg_ctlcluster 16 main start
+sudo -u postgres psql -c "CREATE USER plainly WITH PASSWORD 'plainly' LOGIN;"
+sudo -u postgres psql -c "CREATE DATABASE plainly OWNER plainly;"
+```
 
+`pg_ctlcluster` is only needed when the package does not start the server itself. If the role or database already exists, skip the command that would create it again.
+
+Copy the environment template and replace `BETTER_AUTH_SECRET` and `CRYPTO_KEY` with long random strings. `.env.local` stays uncommitted.
+
+```bash
+cp .env.example .env.local
+```
+
+The placeholder GitHub values are enough to open the sign-in page. To edit a real repository, create a GitHub App and let the helper write its credentials into `.env.local`:
+
+```bash
+npm run setup:github-app -- --base-url http://localhost:3000 --env .env.local --no-open
+```
+
+The helper prints a GitHub URL. Open it, create the app, install it on the repository you want to edit, then start the dev server again. Useful options: `--owner-type personal|org`, `--org <slug>`, `--app-name "Plainly (local)"`.
+
+Apply the migrations and start the app:
+
+```bash
 npm run db:migrate
 npm run dev
 ```
 
-Useful `setup:github-app` options: `--owner-type personal|org`, `--org <slug>`, `--app-name "Plainly (local)"`, `--no-open`.
+Open http://localhost:3000/sign-in. Success is the Plainly mark, the sentence "Войдите, чтобы редактировать свой сайт", a GitHub button, and an email field.
 
-## License
+`npm run build` compiles the app and then applies the same migrations (`postbuild`). It needs `DATABASE_URL` and `BASE_URL`. It does not call GitHub. This repository has no automated test suite. GitHub Actions runs `npm ci` and `npm run build` against PostgreSQL 16, with placeholder GitHub App values, because those credentials are private and the build does not use them.
 
-[MIT](LICENSE). The original Pages CMS copyright is retained per the license.
+## Stack
+
+Next.js App Router, TypeScript, better-auth (email one-time code and GitHub), Drizzle ORM, PostgreSQL, a GitHub App (`@octokit/app` and `@octokit/rest`), TipTap, CodeMirror, Resend or SMTP, and a Vercel project config.
+
+## Status
+
+November 2026. Plainly is a public fork of [Pages CMS](https://pagescms.org) by Ronan Berder. The local changes are the Plainly name, the Russian interface, and client-side image downscaling to WebP before upload.
+
+## Licence
+
+[MIT](LICENSE). Copyright 2025 Ronan Berder and copyright 2026 Gleb Starchikov. Copies keep both copyright notices, as the MIT terms require.
