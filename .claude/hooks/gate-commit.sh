@@ -12,7 +12,7 @@ is_commit="$(printf '%s' "$cmd" | python3 -c 'import sys,re; print("yes" if re.s
 
 [ -d "$ROOT/node_modules" ] || exit 0   # no deps installed → don't gate (fail open)
 
-out="${TMPDIR:-/tmp}/plainly-commit-gate.txt"; : > "$out"; fails=""
+out="$(mktemp "${TMPDIR:-/tmp}/plainly-commit-gate.XXXXXX")" || exit 0; fails=""
 npm run --silent lint      >>"$out" 2>&1 || fails="${fails}eslint "
 npx --no-install tsc --noEmit >>"$out" 2>&1 || fails="${fails}tsc "
 
@@ -20,4 +20,5 @@ if [ -n "$fails" ]; then
   FAILS="$fails" OUT="$out" python3 -c 'import json,os; print(json.dumps({"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Commit blocked — quality gate failed: "+os.environ["FAILS"].strip()+". Details in "+os.environ["OUT"]+". Fix, then commit again."}}))'
   exit 0
 fi
+rm -f "$out"
 exit 0
