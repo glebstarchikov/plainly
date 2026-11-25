@@ -2,7 +2,7 @@
 # PreToolUse(Bash): if the command is a `git commit`, run the quality gate and DENY the commit on failure.
 # Fail-OPEN if node_modules is missing, so a fresh clone can never lock out commits.
 set -uo pipefail
-ROOT="${CLAUDE_PROJECT_DIR:-/Users/glebstarcikov/super-cms-app}"
+ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
 cd "$ROOT" || exit 0
 
 cmd="$(python3 -c 'import sys,json; print(json.load(sys.stdin).get("tool_input",{}).get("command",""))' 2>/dev/null || true)"
@@ -12,7 +12,7 @@ is_commit="$(printf '%s' "$cmd" | python3 -c 'import sys,re; print("yes" if re.s
 
 [ -d "$ROOT/node_modules" ] || exit 0   # no deps installed → don't gate (fail open)
 
-out="/tmp/super-cms-app_gate.txt"; : > "$out"; fails=""
+out="${TMPDIR:-/tmp}/plainly-commit-gate.txt"; : > "$out"; fails=""
 npm run --silent lint      >>"$out" 2>&1 || fails="${fails}eslint "
 npx --no-install tsc --noEmit >>"$out" 2>&1 || fails="${fails}tsc "
 
