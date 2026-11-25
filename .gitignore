@@ -22,6 +22,11 @@
 .docs
 .codex
 
+# editors
+.vscode/
+.idea/
+*.swp
+
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -29,7 +34,7 @@ yarn-error.log*
 
 # env files
 .env*
-!.env.local.example
+!.env.example
 
 # vercel
 .vercel

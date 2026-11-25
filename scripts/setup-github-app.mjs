@@ -21,7 +21,7 @@ async function main() {
       process.env.BETTER_AUTH_URL ||
       "http://localhost:3000",
   );
-  const appName = (args.appName || "Pages CMS").trim();
+  const appName = (args.appName || "Plainly").trim();
   const ownerType = args.ownerType === "org" ? "org" : "personal";
   const orgSlug = ownerType === "org" ? (args.org || "").trim() : "";
   const state = randomBytes(16).toString("hex");
@@ -109,7 +109,7 @@ async function main() {
   console.log("\nNext:");
   console.log("1) Install the app on your target account/repositories.");
   console.log("   Disable 'User-to-server token expiration' if GitHub shows that option.");
-  console.log("2) Start Pages CMS.");
+  console.log("2) Start Plainly with npm run dev.");
 }
 
 main().catch((error) => {
@@ -333,7 +333,7 @@ function printHelp() {
       "",
       "Options:",
       "  --base-url <url>         App base URL (default: http://localhost:3000)",
-      "  --app-name <name>        GitHub App display name (default: Pages CMS)",
+      "  --app-name <name>        GitHub App display name (default: Plainly)",
       "  --owner-type <type>      personal or org (default: personal)",
       "  --org <slug>             Organization slug when owner-type=org",
       "  --port <number>          Local callback port (default: 8787)",
