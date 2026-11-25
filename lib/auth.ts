@@ -154,7 +154,6 @@ export const auth = betterAuth({
     },
   },
   plugins: [
-    nextCookies(),
     emailOTP({
       expiresIn: 300,
       otpLength: 6,
@@ -180,5 +179,7 @@ export const auth = betterAuth({
         });
       },
     }),
+    // Last, as better-auth requires: it forwards Set-Cookie headers set by the plugins before it.
+    nextCookies(),
   ],
 });
