@@ -16,14 +16,21 @@ import { z } from "zod";
 import { randomBytes } from "crypto";
 import { findVerifiedUserByEmail, normalizeEmail } from "@/lib/collaborator-access";
 
+const MAX_INVITE_EMAILS = 50;
+
 const parseInviteEmails = (raw: FormDataEntryValue | null) => {
   const value = typeof raw === "string" ? raw : "";
+  // 256 characters per address is more than any valid email plus its separator.
+  if (value.length > MAX_INVITE_EMAILS * 256) return { success: false as const };
   const parts = value
     .split(/[\n,]+/)
     .map((part) => part.trim())
     .filter(Boolean);
 
   const unique = Array.from(new Set(parts.map((email) => email.toLowerCase())));
+  // Cap the list before zod: zod 3 records an issue for every failing element, so an
+  // uncapped list lets any signed-in user make the server allocate one object per entry.
+  if (unique.length > MAX_INVITE_EMAILS) return { success: false as const };
   return z.array(z.string().email()).safeParse(unique);
 };
 
