@@ -8,7 +8,7 @@ Editing a repository needs a GitHub App of your own; the Quick start sets one up
 
 ## Quick start
 
-Needs Node.js 22 or newer and PostgreSQL 16.
+Needs Node.js 24 and PostgreSQL 16.
 
 Install dependencies:
 
@@ -30,7 +30,7 @@ Copy the environment template. `.env.local` stays uncommitted.
 cp .env.example .env.local
 ```
 
-In `.env.local`, set `BETTER_AUTH_SECRET` and `CRYPTO_KEY` to the output of `openssl rand -base64 32`, a separate run for each. `CRYPTO_KEY` must be in that format, because it is used as an AES-256 key.
+In `.env.local`, set `CRYPTO_KEY` to the output of `openssl rand -base64 32`. It must be in that format, because it is used as an AES-256 key. The GitHub App helper below writes a new `BETTER_AUTH_SECRET`; if you skip the helper, set that the same way.
 
 Signing in takes one of these:
 
@@ -59,7 +59,7 @@ Open http://localhost:3000. You land on the sign-in page shown above.
 Production runs on Vercel with a Supabase database. `.env.example` lists every variable the code reads.
 
 - `DATABASE_URL` is Supabase's transaction pooler (port 6543). Migrations need a session-mode connection, so set `DIRECT_DATABASE_URL` to the session pooler or the direct URL.
-- `npm run build` applies migrations only on a Vercel production build (`VERCEL_ENV=production`), and a failed migration fails the deploy. Preview builds skip them and have no database. Everywhere else, run `npm run db:migrate` yourself.
+- `npm run build` applies migrations only on a Vercel production build (`VERCEL_ENV=production`), and a failed migration fails the deploy. Preview builds skip them and have no database. Everywhere else, run `npm run db:migrate` yourself. "Promote to Production" on a preview rebuilds it as a production build, which runs that branch's migrations, so ship schema changes by merging to main.
 - The GitHub App holds the app's address in its callback, webhook and setup URLs. When the address changes, update them in the App's settings on GitHub.
 
 ## Stack
