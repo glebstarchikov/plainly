@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: plainly
+          POSTGRES_PASSWORD: plainly
+          POSTGRES_DB: plainly
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U plainly -d plainly"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://plainly:plainly@127.0.0.1:5432/plainly
+      BASE_URL: http://localhost:3000
+      BETTER_AUTH_SECRET: ci-only-better-auth-secret
+      CRYPTO_KEY: ci-only-crypto-key
+      GITHUB_APP_ID: "1"
+      GITHUB_APP_NAME: plainly-ci
+      GITHUB_APP_PRIVATE_KEY: placeholder
+      GITHUB_APP_WEBHOOK_SECRET: ci-only-webhook-secret
+      GITHUB_APP_CLIENT_ID: ci-client-id
+      GITHUB_APP_CLIENT_SECRET: ci-client-secret
+      EMAIL_FROM: Plainly <no-reply@example.com>
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      # postbuild migrates only on Vercel production builds, so apply them here.
+      - run: npm run db:migrate

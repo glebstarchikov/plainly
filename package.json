@@ -11,7 +11,7 @@
     "setup:github-app": "node scripts/setup-github-app.mjs",
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "npm run db:migrate",
+    "postbuild": "node scripts/postbuild-migrate.mjs",
     "start": "next start",
     "lint": "eslint .",
     "db:generate": "npx drizzle-kit generate",
