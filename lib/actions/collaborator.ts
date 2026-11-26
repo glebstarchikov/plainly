@@ -28,7 +28,7 @@ const parseInviteEmails = (raw: FormDataEntryValue | null) => {
     .filter(Boolean);
 
   const unique = Array.from(new Set(parts.map((email) => email.toLowerCase())));
-  // Cap the list before zod: zod 3 records an issue for every failing element, so an
+  // Cap the list before zod: zod records an issue for every failing element, so an
   // uncapped list lets any signed-in user make the server allocate one object per entry.
   if (unique.length > MAX_INVITE_EMAILS) return { success: false as const };
   return z.array(z.string().email()).safeParse(unique);
