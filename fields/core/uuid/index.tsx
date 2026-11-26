@@ -7,7 +7,7 @@ const defaultValue = (): string => {
 };
 
 const schema = (field: Field, configObject?: Record<string, any>) => {
-  let zodSchema: z.ZodTypeAny = z.string().uuid("Неверный формат UUID");
+  let zodSchema: z.ZodTypeAny = z.guid("Неверный формат UUID");
 
   if (!field.required) zodSchema = zodSchema.optional().nullable();
 
